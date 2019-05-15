@@ -12,3 +12,24 @@ Create Read Update and Delete framework using JS
 
  ### Advanced Reqs
 - [ ] Item that I added goes here...
+
+Sauces: displays hot sauce/ salsa recipes
+
+name  = {
+	ingredients: {
+		ingredient: quantity,
+		etc.
+	},
+	diections: {
+		step1: ....,
+		step2: ....,
+		etc.
+	},
+	description: {
+		descprition text: .....,
+		uses: [..., ..., ...],
+		spicyness: 1-10,
+		type: fresh/fermented/vinegar, etc.
+		time: how long it takes to make
+	}
+}
