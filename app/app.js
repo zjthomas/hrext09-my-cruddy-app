@@ -40,6 +40,31 @@ var keyExists = function(key) {
   return currentValue !== null;
 }
 
+//add form field
+var addInput = (event) => {
+  event.preventDefault();
+  console.log(event.target.id);
+  if (event.target.id === 'add-ingredient'){
+    let $ingredientDiv = $(`<div class="ingredient"></div>`);
+    let $ingredient = $(`<input type="text" placeholder="Ingredient"></input>`);
+    let $quantity = $(`<input type="text" placeholder="Quantity"></input>`);
+    let $clearBtn = $(`<button class="clear-btn" id="clear-ingredient">X</button>`);
+    let $addBtn = $(`<button class="add-btn" id="add-ingredient">+</button>`);
+    $ingredientDiv.append($ingredient).append($quantity).append($clearBtn).append($addBtn).append($(`.ingredients-wrapper`));
+
+  }
+  if (event.target.id === 'add-step'){
+    console.log('bing')
+  }
+  if (event.target.id === 'add-use'){
+    console.log('bing')
+  }
+  if (event.target.id === 'add-type'){
+    console.log('bing')
+  }
+
+}
+
 
 ///////////////////////////////////////////
 //event handlers for the buttons and ... possibly the inputboxes
@@ -68,4 +93,29 @@ $(document).ready(function() {
       //current key doesnt exist, do stuff
     }
   });
+  $(".add-btn").click(addInput);
+
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

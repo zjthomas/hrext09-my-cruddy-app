@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sauce!</title>
+  <script
+          src="https://code.jquery.com/jquery-3.3.1.js"
+          integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+          crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>
+</head>
+<body>
+  <form>
+
+    <div> 
+      <label>Sauce</label>
+      <input id="sauceName" type="text" placeholder="Sauce Name"></input>
+    </div>
+
+    <div class="ingredients-wrapper">Ingredients
+      <div class="ingredient">
+        <input type="text" placeholder="Ingredient"></input>
+        <input type="text" placeholder="Quantity"></input>
+        <button class="clear-btn" id="clear-ingredient">X</button>
+        <button class="add-btn" id="add-ingredient">+</button>
+      </div>
+    </div>
+
+    <div class="directions-wrapper">Directions
+      <div class="step">
+        <label>Step 1</label>
+        <input type="text" placeholder="Directions"></input>
+        <button class="clear-btn" id="clear-step">X</button>
+        <button class="add-btn" id="add-step">+</button>
+      </div>
+    </div>
+
+    <div>Description
+      <input type="text" placeholder="Description"></input>
+    </div>
+
+     <div class="uses-wrapper">Uses
+      <div class="use">
+        <input type="text" placeholder="Uses"></input>
+         <button class="clear-btn" id="clear-use">X</button>
+        <button class="add-btn" id="add-use">+</button>
+      </div>
+    </div>
+
+     <div>Spicyness
+      <input type="text" placeholder="Spicyness (1-10)"></input>
+    </div>
+
+     <div class="type-wrapper">Type
+      <div class = "type">
+        <input type="text" placeholder="Type"></input>
+        <button class="clear-btn" id="clear-type">X</button>
+        <button class="add-btn" id="add-type">+</button>
+      </div>
+    </div>
+
+     <div>Prep Time
+      <input type="text" placeholder="Prep Time"></input>
+    </div>
+
+     <div>
+      <button id="createButton" type='submit'>Submit Sauce</button>
+    </div>
+
+  </form>
+  <script src='app/app.js'></script>
+</body>
+</html>
