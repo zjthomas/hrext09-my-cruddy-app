@@ -43,26 +43,56 @@ var keyExists = function(key) {
 //add form field
 var addInput = (event) => {
   event.preventDefault();
-  console.log(event.target.id);
-  if (event.target.id === 'add-ingredient'){
-    let $ingredientDiv = $(`<div class="ingredient"></div>`);
-    let $ingredient = $(`<input type="text" placeholder="Ingredient"></input>`);
-    let $quantity = $(`<input type="text" placeholder="Quantity"></input>`);
-    let $clearBtn = $(`<button class="clear-btn" id="clear-ingredient">X</button>`);
-    let $addBtn = $(`<button class="add-btn" id="add-ingredient">+</button>`);
-    $ingredientDiv.append($ingredient).append($quantity).append($clearBtn).append($addBtn).append($(`.ingredients-wrapper`));
+  console.log(event.target.classList[1]);
+  if (event.target.classList[1] === 'add-ingredient'){
+    $(`.ingredient:first`).clone(true).find(`:input`).val(``).end().appendTo($(`.ingredients-wrapper`));
+  }
+  if (event.target.id === `add-step`){
+    $(`.step:first`).clone(true).find(`:input`).val(``).end().appendTo($(`.directions-wrapper`));
+  }
+  if (event.target.id === `add-use`){
+    if ($(`.use`).length < 10){
+      $(`.use:first`).clone(true).find(`:input`).val(``).end().appendTo($(`.uses-wrapper`));
+    }
+    
+  }
+  if (event.target.id === `add-type`){
+    if ($(`.type`).length < 3){
+      $(`.type:first`).clone(true).find(`:input`).val(``).end().appendTo($(`.type-wrapper`));
+    }
+  }
+}
 
+//remove form field
+var removeInput = (event) => {
+  event.preventDefault();
+  if (event.target.classList[1] === 'remove-ingredient'){
+    if ($(`.ingredient`).length > 1){
+      $(`.ingredient:last`).remove();
+    }    
   }
-  if (event.target.id === 'add-step'){
-    console.log('bing')
+  if (event.target.id === `remove-step`){
+    if ($(`.step`).length > 1){
+      $(`.step:last`).remove();
+    }
   }
-  if (event.target.id === 'add-use'){
-    console.log('bing')
+  if (event.target.id === `remove-use`){
+    if ($(`.use`).length > 1){
+      $(`.use:last`).remove();
+    }
   }
-  if (event.target.id === 'add-type'){
-    console.log('bing')
+  if (event.target.id === `remove-type`){
+    if ($(`.type`).length > 1){
+      $(`.type:last`).remove();
+    }
   }
+}
 
+//handle submition and add data
+var makeSauce = (event) => {
+  event.preventDefault();
+  console.log(event.target.form);
+  console.log($('form').serialize())
 }
 
 
@@ -93,7 +123,13 @@ $(document).ready(function() {
       //current key doesnt exist, do stuff
     }
   });
-  $(".add-btn").click(addInput);
+  $(`.add-btn`).click(addInput);
+  $(`.remove-btn`).click(removeInput);
+  $(`#createButton`).click(makeSauce)
+  $( "form" ).submit(function( event ) {
+  console.log( $( this ).serializeArray() );
+  event.preventDefault();
+});
 
 });
 
