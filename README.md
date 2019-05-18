@@ -23,7 +23,7 @@ name  = {
 		etc.
 		notes: ......
 	},
-	diections: {
+	directions: {
 		step1: ....,
 		step2: ....,
 		etc.

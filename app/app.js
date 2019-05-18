@@ -88,48 +88,97 @@ var removeInput = (event) => {
   }
 }
 
-//handle submition and add data
+//handle submition and store data
 var makeSauce = (event) => {
   event.preventDefault();
-  console.log(event.target.form);
-  console.log($('form').serialize())
+  //console.log(event.target.form);
+  //console.log($('form').serializeArray())
+  let data = $(`form`).serializeArray();
+  let sauce = {
+    ingredients: {},
+    directions: {},
+    uses: [],
+    types: []
+  };
+  let stepCount = 0;
+  for (let i = 0; i < data.length; i++){
+    if (data[i][`name`] === `ingredient`){
+      sauce.ingredients[data[i][`value`]] = data[++i][`value`];
+    }else if (data[i][`name`] === `step`){
+      sauce.directions[`Step ${++stepCount}`] = data[i][`value`];
+    }else if (data[i][`name`] === `use`){
+      sauce.uses.push(data[i][`value`]);
+    }else if (data[i][`name`] === `type`){
+      sauce.types.push(data[i][`value`]);
+    }else{
+      sauce[data[i][`name`]] = data[i][`value`];
+    } 
+  }
+  //console.log(sauce)
+  addSauceToSelector(sauce.name);
+  createItem(sauce.name, JSON.stringify(sauce))
 }
+//hide display elements and show sauce form
+var form = false;
+var sauceForm = (event) => {
+  event.preventDefault();
+  if (form){
+    document.getElementById("createSauce").style.display = "none" ;
+    document.getElementById("displaySauce").style.display = "block";
+    form = false;
+  }else{
+    document.getElementById("displaySauce").style.display = "none" ;
+    document.getElementById("createSauce").style.display = "block";
+    form = true;
+  }
+}
+
+//add sauce to selector
+var addSauceToSelector = (sauce) => {
+  $(`<option value="${sauce}"">${sauce}</option>`).appendTo($(`.select-sauce`))
+}
+
+//display sauce
+var displaySauce = (event) => {
+  event.preventDefault();
+  //console.log(event)
+  let sauce = JSON.parse(getItem(event.target.form[0].value));
+  //console.log(sauce);
+  $displayDescription = $(`.display-description`);
+  $displayDescription.html("");
+  $sauceDescription = $(`<div class="sacueDescritpion">Description</div>`)
+  $description = $(`<div>${sauce.description}</div>`).appendTo($(`<div class="descriptionBox">Description</div>`));
+  let useString = sauce.uses.reduce((acc, val) => `${acc}, ${val}`)
+  $uses = $(`<div>Uses:${useString}</div>`).appendTo($(`<div class="useBox">Uses</div>`));
+  $spice = $(`<div class="spicyBox">Spicyness: ${sauce.spicyness}</div>`);
+  $prep = $(`<div class="prepTime">Prep Time: ${sauce.time}</div>`)
+  console.log( $description)
+  console.log($uses)
+  console.log($spice)
+  console.log($prep)
+  $sauceDescription.append($description).append($uses).append($spice).append($prep);
+  $sauceDescription.appendTo($displayDescription);
+
+
+
+
+}
+
+  
 
 
 ///////////////////////////////////////////
 //event handlers for the buttons and ... possibly the inputboxes
   //preventdefault on button clicks
 $(document).ready(function() {
-  $('#createButton').click(function(event) {
-    event.preventDefault();
-
-    var currentKey = $("#keyInput").val();
-    var currentValue = $("#valueInput").val();
-    if (keyExists(currentKey)) {
-      //current key exists, do something error-handle-y
-    } else {
-      createItem(currentKey, currentValue);
-    }
-  });
-
-  $('#updateButton').click(function(event) {
-    event.preventDefault();
-
-    var currentKey = $("#keyInput").val();
-    var currentValue = $("#valueInput").val();
-    if (keyExists(currentKey)) {
-      updateItem(currentKey, currentValue);
-    } else {
-      //current key doesnt exist, do stuff
-    }
-  });
+  document.getElementById("createSauce").style.display = "none";
+ 
   $(`.add-btn`).click(addInput);
   $(`.remove-btn`).click(removeInput);
-  $(`#createButton`).click(makeSauce)
-  $( "form" ).submit(function( event ) {
-  console.log( $( this ).serializeArray() );
-  event.preventDefault();
-});
+  $(`#createButton`).click(makeSauce);
+  $(`.create-sauce`).click(sauceForm);
+  $(`#load-sauce`).click(displaySauce);
+
 
 });
 
