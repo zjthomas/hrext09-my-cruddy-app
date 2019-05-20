@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>Sauce!</title>
+  <script src="app/jquery.js"></script>
+
   <script
           src="https://code.jquery.com/jquery-3.3.1.js"
           integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
@@ -19,19 +21,24 @@
     <button class="create-sauce">Create Sauce</button>
   </header>
 
-  
+
   <div id="displaySauce">
-    <div class="display-wrapper">
-      <div class="display-description">
-        description
-      </div>
-      <div class="display-ingredients">
-        ingredients
+    <div class="name-wrapper">
+      <div class="display-name">
+        Sauce Name
       </div>
     </div>
-    <div class="display-wrapper">
+    <div class="description-wrapper">
+      <div class="display-description">
+        Description
+      </div>
+      <div class="display-ingredients">
+        Ingredients
+      </div>
+    </div>
+    <div class="directions-wrapper">
       <div class="display-directions">
-        directions
+        Directions
       </div>
     </div>
 
