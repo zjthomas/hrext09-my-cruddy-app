@@ -42,21 +42,22 @@ var keyExists = function(key) {
 
 //add form field
 var addInput = (event) => {
+  //console.log(event);
   event.preventDefault();
-  console.log(event.target.classList[1]);
-  if (event.target.classList[1] === 'add-ingredient'){
+  //console.log(event.currentTarget.classList[1]);
+  if (event.currentTarget.id === 'add-ingredient'){
     $(`.ingredient:first`).clone(true).find(`:input`).val(``).end().appendTo($(`.ingredients-wrapper`));
   }
-  if (event.target.id === `add-step`){
+  if (event.currentTarget.id === `add-step`){
     $(`.step:first`).clone(true).find(`:input`).val(``).end().appendTo($(`.directions-wrapper`));
   }
-  if (event.target.id === `add-use`){
+  if (event.currentTarget.id === `add-use`){
     if ($(`.use`).length < 10){
       $(`.use:first`).clone(true).find(`:input`).val(``).end().appendTo($(`.uses-wrapper`));
     }
     
   }
-  if (event.target.id === `add-type`){
+  if (event.currentTarget.id === `add-type`){
     if ($(`.type`).length < 3){
       $(`.type:first`).clone(true).find(`:input`).val(``).end().appendTo($(`.type-wrapper`));
     }
@@ -65,23 +66,25 @@ var addInput = (event) => {
 
 //remove form field
 var removeInput = (event) => {
+  console.log(event);
   event.preventDefault();
-  if (event.target.classList[1] === 'remove-ingredient'){
+  console.log(event.currentTarget.id);
+  if (event.currentTarget.id === 'remove-ingredient'){
     if ($(`.ingredient`).length > 1){
       $(`.ingredient:last`).remove();
     }    
   }
-  if (event.target.id === `remove-step`){
+  if (event.currentTarget.id === `remove-step`){
     if ($(`.step`).length > 1){
       $(`.step:last`).remove();
     }
   }
-  if (event.target.id === `remove-use`){
+  if (event.currentTarget.id === `remove-use`){
     if ($(`.use`).length > 1){
       $(`.use:last`).remove();
     }
   }
-  if (event.target.id === `remove-type`){
+  if (event.currentTarget.id === `remove-type`){
     if ($(`.type`).length > 1){
       $(`.type:last`).remove();
     }
@@ -115,20 +118,27 @@ var makeSauce = (event) => {
     } 
   }
   //console.log(sauce)
+  archiveSauceName(sauce.name);
   addSauceToSelector(sauce.name);
-  createItem(sauce.name, JSON.stringify(sauce))
+  createItem(sauce.name, JSON.stringify(sauce));
+  document.getElementById("createSauce").reset();
+  sauceForm();
 }
-//hide display elements and show sauce form
+//toggle between display elements and sauce form
 var form = false;
 var sauceForm = (event) => {
-  event.preventDefault();
+  if (event){
+    event.preventDefault();
+  }
   if (form){
     document.getElementById("createSauce").style.display = "none" ;
     document.getElementById("displaySauce").style.display = "block";
+    $(`.create-sauce`).text(`Create Sauce`); 
     form = false;
   }else{
     document.getElementById("displaySauce").style.display = "none" ;
     document.getElementById("createSauce").style.display = "block";
+    $(`.create-sauce`).text(`Display Sauce`);  
     form = true;
   }
 }
@@ -138,30 +148,78 @@ var addSauceToSelector = (sauce) => {
   $(`<option value="${sauce}"">${sauce}</option>`).appendTo($(`.select-sauce`))
 }
 
+var loadSelector = () => {
+  let sauces = getItem(`sauceArray`);
+  sauces = JSON.parse(sauces);
+  sauces.forEach((val) => {
+    addSauceToSelector(val);
+  });
+}
+var archiveSauceName = (sauce) => {
+  let sauces = getItem(`sauceArray`);
+  sauces = JSON.parse(sauces);
+  sauces.push(sauce);
+  updateItem(`sauceArray`, JSON.stringify(sauces));
+}
+
 //display sauce
 var displaySauce = (event) => {
   event.preventDefault();
+  if (form){
+    sauceForm();
+  }
   //console.log(event)
   let sauce = JSON.parse(getItem(event.target.form[0].value));
   //console.log(sauce);
-  $displayDescription = $(`.display-description`);
+  //display sauce name
+  let $displayName = $(`.display-name`);
+  $displayName.html("");
+  let $name = $(`<h1 class="name">${sauce.name}</h1>`);
+  $name.appendTo($displayName);
+
+  // display description 
+  let $displayDescription = $(`.display-description`);
   $displayDescription.html("");
-  $sauceDescription = $(`<div class="sacueDescritpion">Description</div>`)
-  $description = $(`<div>${sauce.description}</div>`).appendTo($(`<div class="descriptionBox">Description</div>`));
+  let $sauceDescription = $(`<div class="sauceDescription"></div>`);
+  let $descriptionHeading = $(`<h3>Description</h3>`);
+  $sauceDescription.append($descriptionHeading);
+  let $description = $(`<div class="descriptionBox">${sauce.description}</div>`);
+  $sauceDescription.append($description);
+  let $sauceDescription2 = $(`<div class="sauceDescription"></div>`);
   let useString = sauce.uses.reduce((acc, val) => `${acc}, ${val}`)
-  $uses = $(`<div>Uses:${useString}</div>`).appendTo($(`<div class="useBox">Uses</div>`));
-  $spice = $(`<div class="spicyBox">Spicyness: ${sauce.spicyness}</div>`);
-  $prep = $(`<div class="prepTime">Prep Time: ${sauce.time}</div>`)
-  console.log( $description)
-  console.log($uses)
-  console.log($spice)
-  console.log($prep)
-  $sauceDescription.append($description).append($uses).append($spice).append($prep);
+  let $uses = $(`<div class="useBox"><b>Uses:</b> ${useString}</div>`);
+  let $spice = $(`<div class="spicyBox"><b>Spicyness:</b> ${sauce.spicyness}</div>`);
+  let $prep = $(`<div class="prepTime"><b>Prep Time:</b> ${sauce.time}</div>`)
+  $sauceDescription2.append($uses).append($spice).append($prep);
+  $displayDescription.append($sauceDescription).append($sauceDescription2);
+  /*
   $sauceDescription.appendTo($displayDescription);
+  sauceDescription2.appendTo($displayDescription);
+  */
 
+  // display ingredients
+  let $displayIngredients = $(`.display-ingredients`);
+  $displayIngredients.html("");
+  let $ingredientsHeading = $(`<h3>Ingredients:</h3>`);
+  $displayIngredients.append($ingredientsHeading);
+  let $sauceIngredients = $(`<div class="sauceIngredients"></div>`);
+  for (let key in sauce.ingredients){
+    let $ingredient = $(`<div class="ingredientBox">${key}: ${sauce.ingredients[key]}</div>`)
+    $sauceIngredients.append($ingredient);
+  }
+  $sauceIngredients.appendTo($displayIngredients);
 
-
-
+  //display directions
+  let $displayDirections = $(`.display-directions`);
+  $displayDirections.html("");
+  let $directionsHeading = $(`<h3>Directions:</h3>`)
+  $displayDirections.append($directionsHeading);
+  let $sauceDirections = $(`<div class="sauceDirections"></div>`);
+  for (let key in sauce.directions){
+    let $step = $(`<div class="directionBox"><b>${key}:</b> ${sauce.directions[key]}</div>`)
+    $sauceDirections.append($step);
+  }
+  $sauceDirections.appendTo($displayDirections);
 }
 
   
@@ -172,7 +230,14 @@ var displaySauce = (event) => {
   //preventdefault on button clicks
 $(document).ready(function() {
   document.getElementById("createSauce").style.display = "none";
- 
+
+  if (keyExists(`sauceArray`) && Array.isArray(JSON.parse(getItem(`sauceArray`)))){
+    loadSelector()
+  }else {
+    createItem(`sauceArray`, JSON.stringify([]));
+  }
+
+
   $(`.add-btn`).click(addInput);
   $(`.remove-btn`).click(removeInput);
   $(`#createButton`).click(makeSauce);

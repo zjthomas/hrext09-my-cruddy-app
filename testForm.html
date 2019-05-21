@@ -10,6 +10,8 @@
           integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
           crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.1/underscore-min.js"></script>
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
 </head>
 <body>
   <header>
@@ -36,10 +38,8 @@
         Ingredients
       </div>
     </div>
-    <div class="directions-wrapper">
-      <div class="display-directions">
+    <div class="display-directions">
         Directions
-      </div>
     </div>
 
   </div>
@@ -53,8 +53,8 @@
       <div class="ingredient">
         <input type="text" name="ingredient" placeholder="Ingredient"></input>
         <input type="text" name="quantity" placeholder="Quantity"></input>
-        <button class="add-btn add-ingredient">+</button>
-        <button class="remove-btn remove-ingredient">X</button>
+        <button class="add-btn" id="add-ingredient"><i class="fas fa-plus"></i></button>
+        <button class="remove-btn" id="remove-ingredient"><i class="fas fa-minus"></i></button>
       </div>
     </div>
 
@@ -62,8 +62,8 @@
       <div class="step">
         <label>Step:</label>
         <textarea type="text" name="step" placeholder="Directions" rows="2" cols="50"></textarea>
-        <button class="add-btn" id="add-step">+</button>
-        <button class="remove-btn" id="remove-step">X</button>
+        <button class="add-btn" id="add-step"><i class="fas fa-plus"></i></button>
+        <button class="remove-btn" id="remove-step"><i class="fas fa-minus"></i></button>
       </div>
     </div>
 
@@ -76,8 +76,8 @@
      <div class="uses-wrapper">Uses:
       <div class="use">
         <input type="text" name="use" placeholder="Use"></input>
-        <button class="add-btn" id="add-use">+</button>
-        <button class="remove-btn" id="remove-use">X</button>
+        <button class="add-btn" id="add-use"><i class="fas fa-plus"></i></button>
+        <button class="remove-btn" id="remove-use"><i class="fas fa-minus"></i></button>
       </div>
     </div>
 
@@ -88,8 +88,8 @@
      <div class="type-wrapper">Type:
       <div class = "type">
         <input type="text" name="type" placeholder="Type"></input>
-        <button class="add-btn" id="add-type">+</button>
-        <button class="remove-btn" id="remove-type">X</button>
+        <button class="add-btn" id="add-type"><i class="fas fa-plus"></i></button>
+        <button class="remove-btn" id="remove-type"><i class="fas fa-minus"></i></button>
       </div>
     </div>
 
