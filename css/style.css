@@ -4,6 +4,15 @@
 */
 body{
 	background-color: #C0E7FF;
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+}
+header{
+	width: 1064px;
+	display: flex;
+	justify-content: space-around;
+	
 }
 form{
 	margin: 5px 0;
@@ -20,7 +29,7 @@ h3{
 	height: 22px;
 }
 /*header Buttons*/
-#load-sauce{
+#select-sauce{
 	height: 20px;
 	background-color: #4DBCC9;
 }
@@ -64,6 +73,7 @@ h3{
 	display: flex;
 	flex-wrap: wrap;
 	flex-direction: column;
+	margin-bottom: 15px;
 
 }
 .descriptionBox{
@@ -80,7 +90,9 @@ h3{
 }
 .sauceIngredients{
 	width:470px;
+	/*
 	text-indent: 50px;
+	*/
 	display: flex;
 	flex-wrap: wrap;
 	flex-direction: column;

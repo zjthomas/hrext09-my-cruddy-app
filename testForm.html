@@ -15,21 +15,25 @@
 </head>
 <body>
   <header>
-    <form id="choose-sauce">
-      <select class="select-sauce">
-      </select>
-      <button id="load-sauce" type="submit">Load Sauce</button>
-    </form>
-    <button class="create-sauce">Create Sauce</button>
+    <h1 class="title">Sauces!</h1>
+    <div>
+      <form id="choose-sauce">
+        <select class="select-sauce">
+        </select>
+        <button id="select-sauce" type="submit">Load Sauce</button>
+      </form>
+      <button class="create-sauce">Create Sauce</button>
+      <button class="home-btn">Home</button>
+    </div>
   </header>
 
+  <div id="home-page">
+    <h2>Your Sauces</h2>
+    <ul class="sauce-list">
+    </ul>
+  </div>
 
-  <div id="displaySauce">
-    <div class="name-wrapper">
-      <div class="display-name">
-        Sauce Name
-      </div>
-    </div>
+  <div id="display-sauce" style="display: none">
     <div class="description-wrapper">
       <div class="display-description">
         Description
@@ -41,9 +45,12 @@
     <div class="display-directions">
         Directions
     </div>
+    <div class="delete-sauce">
+      <button class="delete-btn">Delete Sauce</button>
+    </div>
 
   </div>
-  <form id="createSauce">
+  <form id="create-sauce" style="display: none">
     <div> 
       <label>Sauce:</label>
       <input id="sauceName" name="name" type="text" placeholder="Sauce Name"></input>
