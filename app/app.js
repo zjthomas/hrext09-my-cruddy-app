@@ -45,19 +45,18 @@ var addInput = (event) => {
   //console.log(event);
   event.preventDefault();
   //console.log(event.currentTarget.classList[1]);
-  if (event.currentTarget.id === 'add-ingredient'){
+  if (event.currentTarget.classList[1] === 'add-ingredient'){
     $(`.ingredient:first`).clone(true).find(`:input`).val(``).end().appendTo($(`.ingredients-wrapper`));
   }
-  if (event.currentTarget.id === `add-step`){
-    $(`.step:first`).clone(true).find(`:input`).val(``).end().appendTo($(`.directions-wrapper`));
+  if (event.currentTarget.classList[1] === `add-step`){
+    $(`.step:first`).clone(true).find(`:input`).val(``).end().find(`label`).text(`Step ${++state.stepNumber}:`).end().appendTo($(`.directions-wrapper`));
   }
-  if (event.currentTarget.id === `add-use`){
+  if (event.currentTarget.classList[1] === `add-use`){
     if ($(`.use`).length < 10){
       $(`.use:first`).clone(true).find(`:input`).val(``).end().appendTo($(`.uses-wrapper`));
     }
-    
   }
-  if (event.currentTarget.id === `add-type`){
+  if (event.currentTarget.classList[1] === `add-type`){
     if ($(`.type`).length < 3){
       $(`.type:first`).clone(true).find(`:input`).val(``).end().appendTo($(`.type-wrapper`));
     }
@@ -66,25 +65,26 @@ var addInput = (event) => {
 
 //remove form field
 var removeInput = (event) => {
-  console.log(event);
+  //console.log(event);
   event.preventDefault();
-  console.log(event.currentTarget.id);
-  if (event.currentTarget.id === 'remove-ingredient'){
+  //console.log(event.currentTarget.id);
+  if (event.currentTarget.classList[1] === 'remove-ingredient'){
     if ($(`.ingredient`).length > 1){
       $(`.ingredient:last`).remove();
     }    
   }
-  if (event.currentTarget.id === `remove-step`){
+  if (event.currentTarget.classList[1] === `remove-step`){
     if ($(`.step`).length > 1){
       $(`.step:last`).remove();
+      state.stepNumber--;
     }
   }
-  if (event.currentTarget.id === `remove-use`){
+  if (event.currentTarget.classList[1] === `remove-use`){
     if ($(`.use`).length > 1){
       $(`.use:last`).remove();
     }
   }
-  if (event.currentTarget.id === `remove-type`){
+  if (event.currentTarget.classList[1] === `remove-type`){
     if ($(`.type`).length > 1){
       $(`.type:last`).remove();
     }
@@ -135,18 +135,18 @@ var makeSauce = (event) => {
   if (!keyExists(sauce.name)){
     archiveSauceName(sauce.name);
     addSauceToSelector(sauce.name);
+    addSauceToSauceList(sauce.name);
   }
   //console.log(sauce)
   createItem(sauce.name, JSON.stringify(sauce));
-  document.getElementById("create-sauce").reset();
-  changePage(`display`);
+  displaySauce(sauce.name);
+  resetForm();
 }
 var capitalizeFirst = (str) =>{
     return `${str[0].toUpperCase()}${str.slice(1)}`  
 }
 
 //toggle between display elements and sauce form
-var page = `home`;
 var sauceForm = (event) => {
   event.preventDefault();
   //console.log(event.currentTarget.innerText);
@@ -159,23 +159,26 @@ var sauceForm = (event) => {
 }
 let changePage = (desiredPage) => {
   if (desiredPage === `display`){
+    $(`.title`).text(`${state.currentSauce}`);
     document.getElementById("create-sauce").style.display = "none" ;
     document.getElementById("home-page").style.display = "none" ;
     document.getElementById("display-sauce").style.display = "block";
     $(`.create-sauce`).text(`Create Sauce`); 
-    page = `display`;
+    state.page = `display`;
   }else if (desiredPage === `create`){
+    $(`.title`).text(`Make a New Sauce!`);
     document.getElementById("display-sauce").style.display = "none" ;
     document.getElementById("home-page").style.display = "none" ;
     document.getElementById("create-sauce").style.display = "block";
     $(`.create-sauce`).text(`Display Sauce`);  
-    page = `create`;
+    state.page = `create`;
   }else if (desiredPage === `home`){
+    $(`.title`).text(`Sauces!`);
     document.getElementById("create-sauce").style.display = "none" ;
     document.getElementById("display-sauce").style.display = "none";
     document.getElementById("home-page").style.display = "block" ;
     $(`.create-sauce`).text(`Create Sauce`); 
-    page = `home`;
+    state.page = `home`;
   }else{
     console.log(`changePage called on invalid page name: ${desiredPage}`)
   }
@@ -215,36 +218,42 @@ var unarchiveSauceName = (sauce) => {
   console.log(`removed ${sauce} from archive`)
 }
 
+//handle select sauce event
+let selectSauce = (event) => {
+  event.preventDefault();
+  displaySauce(event.target.form[0].value);
+}
+
 
 //display sauce
-var displaySauce = (event) => {
-  event.preventDefault();
-  if (page !== `display`){
+var displaySauce = (sauceName) => {
+  
+  if (state.page !== `display`){
     changePage(`display`);
   }
   //console.log(event)
-  let sauce = JSON.parse(getItem(event.target.form[0].value));
+  let sauce = JSON.parse(getItem(sauceName));
   //console.log(sauce);
   //display sauce name
-  // let $displayName = $(`.display-name`);
-  // $displayName.html("");
-  // let $name = $(`<h1 class="name">${sauce.name}</h1>`);
-  // $name.appendTo($displayName);
-  $(`.title`).text(`${sauce.name}`);
+  $(`.title`).html(`<u>${sauce.name}</u>`);
+  state.currentSauce = sauce.name;
 
   // display description 
   let $displayDescription = $(`.display-description`);
   $displayDescription.html("");
-  let $sauceDescription = $(`<div class="sauceDescription"></div>`);
+  let $sauceDescription = $(`<div class="sauce-description"></div>`);
   let $descriptionHeading = $(`<h3>Description</h3>`);
   $sauceDescription.append($descriptionHeading);
-  let $description = $(`<div class="descriptionBox">${sauce.description}</div>`);
+  let $description = $(`<div class="descriptionBox">${(sauce.description) ? `${sauce.description}` : ``}</div>`);
   $sauceDescription.append($description);
-  let $sauceDescription2 = $(`<div class="sauceDescription"></div>`);
-  let useString = sauce.uses.reduce((acc, val) => `${acc}, ${val}`)
-  let $uses = $(`<div class="useBox"><b>Uses:</b> ${useString}</div>`);
-  let $spice = $(`<div class="spicyBox"><b>Spicyness:</b> ${sauce.spicyness}/10</div>`);
-  let $prep = $(`<div class="prepTime"><b>Prep Time:</b> ${sauce.time}</div>`)
+  let $sauceDescription2 = $(`<div class="sauce-description"></div>`);
+  let useString = ``;
+  if (sauce.uses.length > 0){
+    useString = sauce.uses.reduce((acc, val) => `${acc}, ${val}`)
+  } 
+  let $uses = $(`<div class="use-box"><b>Uses:</b> ${useString}</div>`);
+  let $spice = $(`<div class="spicy-box"><b>Spicyness:</b> ${(sauce.spicyness) ? `${sauce.spicyness}/10` : ``}</div>`);
+  let $prep = $(`<div class="prepTime"><b>Prep Time:</b> ${(sauce.time) ? `${sauce.time}` : ``}</div>`)
   $sauceDescription2.append($uses).append($spice).append($prep);
   $displayDescription.append($sauceDescription).append($sauceDescription2);
   /*
@@ -257,9 +266,9 @@ var displaySauce = (event) => {
   $displayIngredients.html("");
   let $ingredientsHeading = $(`<h3>Ingredients:</h3>`);
   $displayIngredients.append($ingredientsHeading);
-  let $sauceIngredients = $(`<ul class="sauceIngredients"></ul>`);
+  let $sauceIngredients = $(`<ul class="sauce-ingredients"></ul>`);
   for (let key in sauce.ingredients){
-    let $ingredient = $(`<li class="ingredientBox">${key}${(sauce.ingredients[key]) ? 
+    let $ingredient = $(`<li class="ingredient-box">${key}${(sauce.ingredients[key]) ? 
                                                           `: ${sauce.ingredients[key]}` : ``}</li>`)
     $sauceIngredients.append($ingredient);
   }
@@ -270,9 +279,9 @@ var displaySauce = (event) => {
   $displayDirections.html("");
   let $directionsHeading = $(`<h3>Directions:</h3>`)
   $displayDirections.append($directionsHeading);
-  let $sauceDirections = $(`<div class="sauceDirections"></div>`);
+  let $sauceDirections = $(`<div class="sauce-directions"></div>`);
   for (let key in sauce.directions){
-    let $step = $(`<div class="directionBox"><b>${key}:</b> ${sauce.directions[key]}</div>`)
+    let $step = $(`<div class="direction-box"><b>${key}:</b> ${sauce.directions[key]}</div>`)
     $sauceDirections.append($step);
   }
   $sauceDirections.appendTo($displayDirections);
@@ -281,7 +290,7 @@ var displaySauce = (event) => {
 //delete Sauce
 let deleteSauce = (event) =>{
   //console.log(event)
-  let sauce = $(`h1`).text();
+  let sauce = $(`.title`).text();
   //console.log(sauce)
   if (keyExists(sauce)){
     if (confirm(`Are you sure you want to delete ${sauce} from your sauces?`)){
@@ -318,9 +327,52 @@ let removeSauceFromSauceList = (sauce) => {
   $(`#${sauce}`).remove();
 }
 
+let resetForm = () => {
+  let $ingredientsWrapper = $(`.ingredients-wrapper`);
+  $ingredientsWrapper.html(`Ingredients:
+      <div class="ingredient">
+        <input type="text" name="ingredient" placeholder="Ingredient"></input>
+        <input type="text" name="quantity" placeholder="Quantity"></input>
+        <button class="add-btn" id="add-ingredient"><i class="fas fa-plus"></i></button>
+        <button class="remove-btn" id="remove-ingredient"><i class="fas fa-minus"></i></button>
+      </div>`);
+
+  let $directionsWrapper = $(`.directions-wrapper`);
+  $directionsWrapper.html(`Directions:
+      <div class="step">
+        <label>Step 1:</label>
+        <textarea type="text" name="step" placeholder="Directions" rows="2" cols="50"></textarea>
+        <button class="add-btn" id="add-step"><i class="fas fa-plus"></i></button>
+        <button class="remove-btn" id="remove-step"><i class="fas fa-minus"></i></button>
+      </div>`);
+  state.stepNumber = 1;
+
+  let $usesWrapper = $(`.uses-wrapper`);
+  $usesWrapper.html(`Uses:
+      <div class="use">
+        <input type="text" name="use" placeholder="Use"></input>
+        <button class="add-btn" id="add-use"><i class="fas fa-plus"></i></button>
+        <button class="remove-btn" id="remove-use"><i class="fas fa-minus"></i></button>
+      </div>`);
+
+  let $typeWrapper = $(`.type-wrapper`);
+  $typeWrapper.html(`Type:
+      <div class = "type">
+        <input type="text" name="type" placeholder="Type"></input>
+        <button class="add-btn" id="add-type"><i class="fas fa-plus"></i></button>
+        <button class="remove-btn" id="remove-type"><i class="fas fa-minus"></i></button>
+      </div>`);
+
+  document.getElementById("create-sauce").reset();
+}
+
 
   
-
+let state = {
+  page: `home`,
+  currentSauce: ``,
+  stepNumber: 1
+}
 
 ///////////////////////////////////////////
 //event handlers for the buttons and ... possibly the inputboxes
@@ -328,21 +380,23 @@ let removeSauceFromSauceList = (sauce) => {
 $(document).ready(function() {
   // document.getElementById("display-sauce").style.display = "none";
   // document.getElementById("create-sauce").style.display = "none";
-  loadSauceList();
   if (keyExists(`sauceArray`) && Array.isArray(JSON.parse(getItem(`sauceArray`)))){
     loadSelector()
+    loadSauceList();
   }else {
     createItem(`sauceArray`, JSON.stringify([]));
   }
 
 
+
   $(`.add-btn`).click(addInput);
   $(`.remove-btn`).click(removeInput);
-  $(`#createButton`).click(makeSauce);
+  $(`#submit-sauce`).click(makeSauce);
   $(`.create-sauce`).click(sauceForm);
-  $(`#select-sauce`).click(displaySauce);
+  $(`#select-sauce`).click(selectSauce);
   $(`.delete-btn`).click(deleteSauce);
   $(`.home-btn`).click((event) => changePage(`home`));
+  $(`.sauce-list-element`).click((event) => displaySauce(event.currentTarget.id));
 
 
 });

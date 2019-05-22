@@ -15,7 +15,15 @@
 </head>
 <body>
   <header>
-    <h1 class="title">Sauces!</h1>
+    <h1>Sauces!</h1>
+    <button class="home-btn">Home</button>
+    <button class="create-sauce">Create Sauce</button>
+    <form id="choose-sauce">
+        <select class="select-sauce">
+        </select>
+        <button id="select-sauce" type="submit">Load Sauce</button>
+    </form>
+    <!--
     <div>
       <form id="choose-sauce">
         <select class="select-sauce">
@@ -25,15 +33,17 @@
       <button class="create-sauce">Create Sauce</button>
       <button class="home-btn">Home</button>
     </div>
+  -->
   </header>
 
   <div id="home-page">
-    <h2>Your Sauces</h2>
+    <h2>Your Sauces:</h2>
     <ul class="sauce-list">
     </ul>
   </div>
 
   <div id="display-sauce" style="display: none">
+    <h2  class="title"></h2>
     <div class="description-wrapper">
       <div class="display-description">
         Description
@@ -60,17 +70,17 @@
       <div class="ingredient">
         <input type="text" name="ingredient" placeholder="Ingredient"></input>
         <input type="text" name="quantity" placeholder="Quantity"></input>
-        <button class="add-btn" id="add-ingredient"><i class="fas fa-plus"></i></button>
-        <button class="remove-btn" id="remove-ingredient"><i class="fas fa-minus"></i></button>
+        <button class="add-btn add-ingredient"><i class="fas fa-plus"></i></button>
+        <button class="remove-btn remove-ingredient"><i class="fas fa-minus"></i></button>
       </div>
     </div>
 
     <div class="directions-wrapper">Directions:
       <div class="step">
-        <label>Step:</label>
+        <label>Step 1:</label>
         <textarea type="text" name="step" placeholder="Directions" rows="2" cols="50"></textarea>
-        <button class="add-btn" id="add-step"><i class="fas fa-plus"></i></button>
-        <button class="remove-btn" id="remove-step"><i class="fas fa-minus"></i></button>
+        <button class="add-btn add-step"><i class="fas fa-plus"></i></button>
+        <button class="remove-btn remove-step"><i class="fas fa-minus"></i></button>
       </div>
     </div>
 
@@ -83,29 +93,33 @@
      <div class="uses-wrapper">Uses:
       <div class="use">
         <input type="text" name="use" placeholder="Use"></input>
-        <button class="add-btn" id="add-use"><i class="fas fa-plus"></i></button>
-        <button class="remove-btn" id="remove-use"><i class="fas fa-minus"></i></button>
+        <button class="add-btn add-use"><i class="fas fa-plus"></i></button>
+        <button class="remove-btn remove-use"><i class="fas fa-minus"></i></button>
       </div>
     </div>
 
      <div>Spicyness:
-      <input type="number" name="spicyness" placeholder="Spicyness (1-10)" min="1" max="11"></input>
+      <div>
+        <input type="number" name="spicyness" placeholder="Spicyness (1-10)"></input>
+      </div>
     </div>
 
      <div class="type-wrapper">Type:
       <div class = "type">
         <input type="text" name="type" placeholder="Type"></input>
-        <button class="add-btn" id="add-type"><i class="fas fa-plus"></i></button>
-        <button class="remove-btn" id="remove-type"><i class="fas fa-minus"></i></button>
+        <button class="add-btn add-type"><i class="fas fa-plus"></i></button>
+        <button class="remove-btn remove-type"><i class="fas fa-minus"></i></button>
       </div>
     </div>
 
      <div>Prep Time:
-      <input type="number" name="time" placeholder="Prep Time (mins)"></input>
+      <div>
+        <input type="number" name="time" placeholder="Prep Time (mins)"></input>
+      </div>
     </div>
 
-     <div>
-      <button id="createButton" type="submit">Submit Sauce</button>
+     <div class=submit-button-holder>
+      <button id="submit-sauce" type="submit">Submit Sauce</button>
     </div>
   </form>
   <script src='app/app.js'></script>
