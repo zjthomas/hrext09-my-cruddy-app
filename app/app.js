@@ -132,15 +132,20 @@ var makeSauce = (event) => {
     }
     
   }
-  if (!keyExists(sauce.name)){
-    archiveSauceName(sauce.name);
-    addSauceToSelector(sauce.name);
-    addSauceToSauceList(sauce.name);
+  if (sauce.name){
+    if (!keyExists(sauce.name)){
+      archiveSauceName(sauce.name);
+      addSauceToSelector(sauce.name);
+      addSauceToSauceList(sauce.name);
+    }
+    //console.log(sauce)
+    createItem(sauce.name, JSON.stringify(sauce));
+    displaySauce(sauce.name);
+    resetForm();
+  }else{
+    alert(`No Sauce Name!`)
   }
-  //console.log(sauce)
-  createItem(sauce.name, JSON.stringify(sauce));
-  displaySauce(sauce.name);
-  resetForm();
+  
 }
 var capitalizeFirst = (str) =>{
     return `${str[0].toUpperCase()}${str.slice(1)}`  
@@ -328,40 +333,31 @@ let removeSauceFromSauceList = (sauce) => {
 }
 
 let resetForm = () => {
+
   let $ingredientsWrapper = $(`.ingredients-wrapper`);
-  $ingredientsWrapper.html(`Ingredients:
-      <div class="ingredient">
-        <input type="text" name="ingredient" placeholder="Ingredient"></input>
-        <input type="text" name="quantity" placeholder="Quantity"></input>
-        <button class="add-btn" id="add-ingredient"><i class="fas fa-plus"></i></button>
-        <button class="remove-btn" id="remove-ingredient"><i class="fas fa-minus"></i></button>
-      </div>`);
+  let $ingredient = $(`.ingredient:first`).clone(true).find(`:input`).val(``).end();
+  $ingredientsWrapper.html(``);
+  $ingredientsWrapper.text(`Ingredients:`);
+  $ingredient.appendTo($ingredientsWrapper);
 
   let $directionsWrapper = $(`.directions-wrapper`);
-  $directionsWrapper.html(`Directions:
-      <div class="step">
-        <label>Step 1:</label>
-        <textarea type="text" name="step" placeholder="Directions" rows="2" cols="50"></textarea>
-        <button class="add-btn" id="add-step"><i class="fas fa-plus"></i></button>
-        <button class="remove-btn" id="remove-step"><i class="fas fa-minus"></i></button>
-      </div>`);
+  let $step = $(`.step:first`).clone(true).find(`:input`).val(``).end();
+  $directionsWrapper.html(``);
+  $directionsWrapper.text(`Directions:`);
+  $step.appendTo($directionsWrapper);
   state.stepNumber = 1;
 
   let $usesWrapper = $(`.uses-wrapper`);
-  $usesWrapper.html(`Uses:
-      <div class="use">
-        <input type="text" name="use" placeholder="Use"></input>
-        <button class="add-btn" id="add-use"><i class="fas fa-plus"></i></button>
-        <button class="remove-btn" id="remove-use"><i class="fas fa-minus"></i></button>
-      </div>`);
+  let $use = $(`.use:first`).clone(true).find(`:input`).val(``).end();
+  $usesWrapper.html(``);
+  $usesWrapper.text(`Uses:`)
+  $use.appendTo($usesWrapper);
 
   let $typeWrapper = $(`.type-wrapper`);
-  $typeWrapper.html(`Type:
-      <div class = "type">
-        <input type="text" name="type" placeholder="Type"></input>
-        <button class="add-btn" id="add-type"><i class="fas fa-plus"></i></button>
-        <button class="remove-btn" id="remove-type"><i class="fas fa-minus"></i></button>
-      </div>`);
+  let $type = $(`.type:first`).clone(true).find(`:input`).val(``).end();
+  $typeWrapper.html(``);
+  $typeWrapper.text(`Type:`);
+  $type.appendTo($typeWrapper);
 
   document.getElementById("create-sauce").reset();
 }
@@ -396,8 +392,8 @@ $(document).ready(function() {
   $(`#select-sauce`).click(selectSauce);
   $(`.delete-btn`).click(deleteSauce);
   $(`.home-btn`).click((event) => changePage(`home`));
-  $(`.sauce-list-element`).click((event) => displaySauce(event.currentTarget.id));
-
+  //$(`.sauce-list-element`).click((event) => displaySauce(event.currentTarget.id));//for some reason this wasnt working with newly added buttons
+  $(document).on(`click`,`.sauce-list-element`, (event) => displaySauce(event.currentTarget.id));
 
 });
 

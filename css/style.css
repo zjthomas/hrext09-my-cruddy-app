@@ -30,9 +30,11 @@ select {
 }
 button {
 	cursor: pointer;
+	outline:0;
 }
 h1{
 	font-size: 40px;
+	margin-right: 10px;
 }
 h3{
 	height: 22px;
@@ -54,9 +56,14 @@ h3{
 .create-sauce:hover{
 	background-color: #85803A;
 }
+#choose-sauce{
+	display: flex;
+	justify-content: flex-start;
+}
 .select-sauce{
 	height: 40px;
-	background-color: 
+	background-color: white;
+	outline:0; 
 }
 #select-sauce{
 	height: 40px;
@@ -174,6 +181,7 @@ h3{
 	border: none;
 	background-color: inherit;
 	font-size: 20px;
+	outline: 2px;
 	/*
 	background-color: green;
 	border-radius: 100%;
@@ -187,6 +195,9 @@ h3{
 .add-btn:hover{
 	color: #006022;
 }
+.add-btn:focus{
+	color: #006022;
+}
 
 .remove-btn{
 	/*
@@ -196,6 +207,7 @@ h3{
 	border: none;
 	background-color: inherit;
 	font-size: 20px;
+	outline: 2px;
 
 	/*
 	background-color: red;
@@ -208,6 +220,9 @@ h3{
 */
 }
 .remove-btn:hover{
+	color: #843229;
+}
+.remove-btn:focus{
 	color: #843229;
 }
 
