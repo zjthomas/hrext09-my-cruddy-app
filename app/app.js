@@ -163,6 +163,7 @@ var sauceForm = (event) => {
   
 }
 let changePage = (desiredPage) => {
+  if (state.page === `display`){toggleEditing(false);}
   if (desiredPage === `display`){
     $(`.title`).text(`${state.currentSauce}`);
     document.getElementById("create-sauce").style.display = "none" ;
@@ -249,7 +250,7 @@ var displaySauce = (sauceName) => {
   let $sauceDescription = $(`<div class="sauce-description"></div>`);
   let $descriptionHeading = $(`<h3>Description</h3>`);
   $sauceDescription.append($descriptionHeading);
-  let $description = $(`<div class="descriptionBox">${(sauce.description) ? `${sauce.description}` : ``}</div>`);
+  let $description = $(`<div class="description-box">${(sauce.description) ? `${sauce.description}` : ``}</div>`);
   $sauceDescription.append($description);
   let $sauceDescription2 = $(`<div class="sauce-description"></div>`);
   let useString = ``;
@@ -258,7 +259,7 @@ var displaySauce = (sauceName) => {
   } 
   let $uses = $(`<div class="use-box"><b>Uses:</b> ${useString}</div>`);
   let $spice = $(`<div class="spicy-box"><b>Spicyness:</b> ${(sauce.spicyness) ? `${sauce.spicyness}/10` : ``}</div>`);
-  let $prep = $(`<div class="prepTime"><b>Prep Time:</b> ${(sauce.time) ? `${sauce.time}` : ``}</div>`)
+  let $prep = $(`<div class="time-box"><b>Prep Time:</b> ${(sauce.time) ? `${sauce.time}` : ``}</div>`)
   $sauceDescription2.append($uses).append($spice).append($prep);
   $displayDescription.append($sauceDescription).append($sauceDescription2);
   /*
@@ -284,9 +285,9 @@ var displaySauce = (sauceName) => {
   $displayDirections.html("");
   let $directionsHeading = $(`<h3>Directions:</h3>`)
   $displayDirections.append($directionsHeading);
-  let $sauceDirections = $(`<div class="sauce-directions"></div>`);
+  let $sauceDirections = $(`<ol class="sauce-directions"></ol>`);
   for (let key in sauce.directions){
-    let $step = $(`<div class="direction-box"><b>${key}:</b> ${sauce.directions[key]}</div>`)
+    let $step = $(`<li class="direction-box">${sauce.directions[key]}</li>`)
     $sauceDirections.append($step);
   }
   $sauceDirections.appendTo($displayDirections);
@@ -322,16 +323,19 @@ let loadSauceList = () => {
   });
   console.log(`finish loadSauceList`)
 }
+
 //add sauces to sauce list
 let addSauceToSauceList = (sauce) => {
   let $sauceList = $(`.sauce-list`);
   $(`<li class="sauce-list-element" id="${sauce}">${sauce}</li>`).appendTo($sauceList)
 }
+
 //remove sauces from sauce list
 let removeSauceFromSauceList = (sauce) => {
   $(`#${sauce}`).remove();
 }
 
+//resets form to orignial state
 let resetForm = () => {
 
   let $ingredientsWrapper = $(`.ingredients-wrapper`);
@@ -361,6 +365,47 @@ let resetForm = () => {
 
   document.getElementById("create-sauce").reset();
 }
+
+
+
+// edit sauces
+let toggleEditing = (overRide) => {
+  let editables = [`title`, `description-box`, `use-box`, `spicy-box`, 
+                    `time-box`, `sauce-ingredients`, `sauce-directions`];
+  editables = editables.map((val) => document.getElementsByClassName(val)[0]);
+  //console.log(editables[0].contentEditable);
+  if (editables[0].contentEditable == "true" || overRide === false){
+    editables.forEach((val) => disableEditing(val));
+    console.log(`uneditable`);
+  }else{
+    editables.forEach((val) => enableEditing(val));
+    console.log(`editable`);
+  }
+}
+
+//turn editing on
+let enableEditing = (element) => {
+  element.contentEditable = "true";
+}
+//turn editing off
+let disableEditing = (element) => {
+  element.contentEditable = "false";
+}
+
+let getContent = () => {
+  //console.log(document.getElementsByClassName(`ingredient-box`))
+  let pageCollection = [`title`, `description-box`, `use-box`, `spicy-box`, 
+                  `time-box`, `ingredient-box`, `direction-box`];
+  pageCollection = pageCollection.map((val) => document.getElementsByClassName(val));
+  console.log(pageCollection);
+  pageCollection.forEach((itemCollection) => {
+    itemCollection.forEach((content) => {
+      
+    })
+
+  })
+}
+
 
 
   
@@ -394,7 +439,7 @@ $(document).ready(function() {
   $(`.home-btn`).click((event) => changePage(`home`));
   //$(`.sauce-list-element`).click((event) => displaySauce(event.currentTarget.id));//for some reason this wasnt working with newly added buttons
   $(document).on(`click`,`.sauce-list-element`, (event) => displaySauce(event.currentTarget.id));
-
+  $(`.edit-btn`).click(toggleEditing);
 });
 
 
