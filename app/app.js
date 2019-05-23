@@ -413,7 +413,8 @@ let getContent = () => {
       
     }
   }
-  console.log(uglyData)
+  //console.log(uglyData)
+  return uglyData;
 }
 
 //convert content data to sauce object
@@ -463,6 +464,7 @@ let handleUglyData = (data) =>{
       }****/
     } 
   }
+  return sauce;
 }
 //pulls the data out of the content strings, should swicth to regEx eventually
 let findString = (str, startChar, endChar) => {
