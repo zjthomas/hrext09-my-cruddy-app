@@ -103,6 +103,7 @@ var makeSauce = (event) => {
     uses: [],
     types: []
   };
+  // data = [{name:... ,value:... }....]
   let stepCount = 0;
   for (let i = 0; i < data.length; i++){
     if (data[i][`value`]){
@@ -110,7 +111,7 @@ var makeSauce = (event) => {
         let ingredient = capitalizeFirst(data[i][`value`]);
         sauce.ingredients[ingredient] = data[++i][`value`];
       }else if (data[i][`name`] === `step`){
-        let step = `${capitalizeFirst(data[i][`value`])}.`
+        let step = `${capitalizeFirst(data[i][`value`])}`
         sauce.directions[`Step ${++stepCount}`] = step;
       }else if (data[i][`name`] === `use`){
         let use = capitalizeFirst(data[i][`value`])
@@ -129,8 +130,7 @@ var makeSauce = (event) => {
       }else{
         sauce[data[i][`name`]] = data[i][`value`];
       } 
-    }
-    
+    } 
   }
   if (sauce.name){
     if (!keyExists(sauce.name)){
@@ -397,14 +397,89 @@ let getContent = () => {
   let pageCollection = [`title`, `description-box`, `use-box`, `spicy-box`, 
                   `time-box`, `ingredient-box`, `direction-box`];
   pageCollection = pageCollection.map((val) => document.getElementsByClassName(val));
-  console.log(pageCollection);
-  pageCollection.forEach((itemCollection) => {
-    itemCollection.forEach((content) => {
+  //console.log(pageCollection);
+  let uglyData = []
+  for (let itemCollection of pageCollection){
+    for (let content of itemCollection){
+      //console.log(`${content.className} is paired with ${content.textContent}`)
+      uglyData.push({name: content.className, value: content.textContent});
+      /*
+      if (!uglyData[content.className]){
+        uglyData[content.className] = [content.textContent];
+      }else{
+        uglyData[content.className].push(content.textContent);
+      }
+      */
       
-    })
-
-  })
+    }
+  }
+  console.log(uglyData)
 }
+
+//convert content data to sauce object
+let handleUglyData = (data) =>{
+  let sauce = {
+    ingredients: {},
+    directions: {},
+    uses: [],
+    types: []
+  };
+  let stepCount = 0;
+  for (let i = 0; i < data.length; i++){
+    if (data[i][`value`]){
+      if(data[i][`name`] === `title`){
+        sauce.name = data[i][`value`];
+      }else if (data[i][`name`] === `description-box`){
+        sauce.description = data[i][`value`];
+      }else if (data[i][`name`] === `use-box`){
+        let useArray = findString(data[i][`value`],` `, `,`);
+        useArray.forEach((val) => {
+          sauce.uses.push(capitalizeFirst(val));
+        });
+        
+      }else if (data[i][`name`] === `spicy-box`){
+        let spice = findString(data[i][`value`],` `, `/`)[0];
+        if (spice < 0){
+          spice = 0;
+        }
+        if (spice > 11){
+          spice = 11;
+        }
+        sauce.spicyness = spice;
+      }else if (data[i][`name`] === `time-box`){
+        let time = Number(findString(data[i][`value`],`: `))
+        sauce.time = time;
+      }else if (data[i][`name`] === `ingredient-box`){
+        let ingredient = findString(data[i][`value`], null, `:`)[0];
+        let quantity = findString(data[i][`value`],` `)[0];
+        ingredient = capitalizeFirst(ingredient);
+        sauce.ingredients[ingredient] = quantity;
+      }else if (data[i][`name`] === `direction-box`){
+        let step = `${capitalizeFirst(data[i][`value`])}`
+        sauce.directions[`Step ${++stepCount}`] = step;
+      }/****else if (data[i][`name`] === `type`){
+        let type = data[i][`value`].toLowerCase();
+        sauce.types.push(type);
+      }****/
+    } 
+  }
+}
+//pulls the data out of the content strings, should swicth to regEx eventually
+let findString = (str, startChar, endChar) => {
+  let i1 = (startChar === null) ? 0: str.indexOf(startChar) + 1;
+  let i2 =  str.indexOf(endChar);
+  if (i1 === -1){
+    return []
+  }
+  if (i2 <= i1){
+    return [str.slice(i1)]
+  }
+  return [str.slice(i1,i2)].concat(findString(str.slice(i2), startChar, endChar));
+}
+
+
+
+
 
 
 
