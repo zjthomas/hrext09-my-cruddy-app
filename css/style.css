@@ -3,7 +3,7 @@
   buttons
 */
 body{
-	background-color: #C0E7FF;
+	background-color: #D3D3D3;
 	margin: 0;
 	display: flex;
 	align-items: center;
@@ -11,7 +11,8 @@ body{
 }
 header{
 	width: 100%;
-	background-color: orange;
+	background-color: white;
+	border-bottom: 2px solid black;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -46,15 +47,18 @@ h3{
 .home-btn{
 	height: 40px;
 	width: 100px;
-	background-color: #934AE8;
+	background-color: white;
+	border:2px solid #934AE8;
+	
 }
 .home-btn:hover{
-	background-color: #65339E;
+	background-color: #5F5496; /*#65339E;*/
 }
 .create-sauce{
 	height: 40px;
 	width: 100px;
-	background-color: #D9D15F;
+	background-color: white;
+	border:2px solid #D9D15F;
 }
 .create-sauce:hover{
 	background-color: #85803A;
@@ -66,12 +70,14 @@ h3{
 .select-sauce{
 	height: 40px;
 	background-color: white;
-	outline:0; 
+	outline:0;
+	border:2px solid #D3D3D3; 
 }
 #select-sauce{
 	height: 40px;
 	width: 100px;
-	background-color: #4DBCC9;
+	background-color: white;
+	border:2px solid #4DBCC9; 
 }
 #select-sauce:hover{
 	background-color: #30777A;
@@ -83,31 +89,42 @@ h3{
 	width: 632px;
 	display:flex;
 	flex-direction: row;
+	background-color: white;
+    border: 1px solid black;
+    padding: 10px;
 }
 .sauce-list-element:hover{
-	color: white;
+	color: red;
 	cursor: pointer;
 }
 
 /*********************** Display ********************************/
 #display-sauce{
 	width: 80%;
+	max-width: 900px;
 	display: flex;
 	flex-direction: column;
-
+	background-color: white;
+    padding: 0 15px 15px;
+    border-radius: 4px;
+    border: 1px solid black;
 }
 .title{
 	width: 80%;
+    margin-top: 20px;
+    margin-bottom: 0px;
 }
 .description-wrapper{
 	display:flex;
 	flex-direction: row;
 	justify-content: center;
+	border: 1px solid black;
+    border-radius: 4px;
 
 }
 .display-description{
 	width: 50%;
-	background-color: #9E4544;
+	background-color: #E67272; /*#FF8F8C;*/
 	padding: 15px;
 	border: 1px solid black;
 	display: flex;
@@ -116,8 +133,7 @@ h3{
 }
 .sauce-description{
 	border-top: 2px dashed black;
-	width: 470px;
-	text-indent: 50px;
+	width: 100%;
 	display: flex;
 	flex-wrap: wrap;
 	flex-direction: column;
@@ -128,6 +144,15 @@ h3{
 	width:100%;
 	display: flex;
 	flex-wrap: wrap;
+}
+.use-box{
+	padding-top: 5px;
+}
+.spicy-box{
+	padding-top: 2px;
+}
+.time-box{
+	padding-top: 2px;
 }
 
 .display-ingredients{
@@ -171,16 +196,32 @@ h3{
 }
 .edit-btn{
 	height:20px;
-	background-color: yellow;
+	/*background-color: yellow;*/
+}
+.edit-btn:hover{
+	background-color: grey;
 }
 .delete-btn{
 	height: 20px;
-	background-color: red;
+	/*background-color: red;*/
+}
+.delete-btn:hover{
+	background-color: grey;
 }
 
 
 /*********************************** form *********************************/
 
+#create-sauce{
+	display: flex;
+	flex-direction: column;
+	background-color: white;
+    padding: 10px;
+    border-radius: 4px;
+    border: 2px solid black;
+    width:70%;
+    max-width: 600px;
+}
 .directions-wrapper{
 	display:flex;
 	flex-direction: column;
@@ -188,21 +229,11 @@ h3{
 
 }
 .add-btn{
-	
 	color: #00DB22;
 	border: none;
 	background-color: inherit;
 	font-size: 20px;
 	outline: 2px;
-	/*
-	background-color: green;
-	border-radius: 100%;
-	color: white;
-	border: 2px solid black;
-	font-size: 20px;
-	height: 30px;
-	width: 30px;
-	*/
 }
 .add-btn:hover{
 	color: #006022;
@@ -212,24 +243,11 @@ h3{
 }
 
 .remove-btn{
-	/*
-	all: unset;
-	*/
 	color: #E33229;
 	border: none;
 	background-color: inherit;
 	font-size: 20px;
 	outline: 2px;
-
-	/*
-	background-color: red;
-	border-radius: 100%;
-	color: white;
-	border: 2px solid black;
-	font-size: 14px;
-	height: 30px;
-	width: 30px;
-*/
 }
 .remove-btn:hover{
 	color: #843229;
@@ -239,7 +257,10 @@ h3{
 }
 
 input[type=text] {
-
+	
+}
+textarea {
+   resize: none;
 }
 .submit-button-holder{
 	display: flex;
@@ -248,11 +269,14 @@ input[type=text] {
 
 #submit-sauce{
 	height: 20px;
-	background-color: #7C0791;
-	color: white;
+	background-color: white;
+	color: black;
 	margin:20px;
+	border:2px solid #7C0791;
 }
-
+#submit-sauce:hover{
+	background-color: #7C0791
+}
 
 
 

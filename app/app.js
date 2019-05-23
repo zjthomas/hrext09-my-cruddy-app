@@ -97,6 +97,7 @@ var makeSauce = (event) => {
   //console.log(event.target.form);
   //console.log($('form').serializeArray())
   let data = $(`form`).serializeArray();
+  //console.log(data);
   let sauce = {
     ingredients: {},
     directions: {},
@@ -132,6 +133,20 @@ var makeSauce = (event) => {
       } 
     } 
   }
+  //console.log(sauce);
+  if (keyExists(sauce.name)){
+    if(confirm(`Are you sure you want to overwrite and existing Sauce?`)){
+      saveSauce(sauce);
+      resetForm();
+    }
+  }else{
+    saveSauce(sauce);
+    resetForm();
+  }
+  
+}
+
+let saveSauce = (sauce) => {
   if (sauce.name){
     if (!keyExists(sauce.name)){
       archiveSauceName(sauce.name);
@@ -141,12 +156,12 @@ var makeSauce = (event) => {
     //console.log(sauce)
     createItem(sauce.name, JSON.stringify(sauce));
     displaySauce(sauce.name);
-    resetForm();
+    console.log(`Sauce Saved`); 
   }else{
     alert(`No Sauce Name!`)
   }
-  
 }
+
 var capitalizeFirst = (str) =>{
     return `${str[0].toUpperCase()}${str.slice(1)}`  
 }
@@ -168,21 +183,21 @@ let changePage = (desiredPage) => {
     $(`.title`).text(`${state.currentSauce}`);
     document.getElementById("create-sauce").style.display = "none" ;
     document.getElementById("home-page").style.display = "none" ;
-    document.getElementById("display-sauce").style.display = "block";
+    document.getElementById("display-sauce").style.display = "flex";
     $(`.create-sauce`).text(`Create Sauce`); 
     state.page = `display`;
   }else if (desiredPage === `create`){
     $(`.title`).text(`Make a New Sauce!`);
     document.getElementById("display-sauce").style.display = "none" ;
     document.getElementById("home-page").style.display = "none" ;
-    document.getElementById("create-sauce").style.display = "block";
+    document.getElementById("create-sauce").style.display = "flex";
     $(`.create-sauce`).text(`Display Sauce`);  
     state.page = `create`;
   }else if (desiredPage === `home`){
     $(`.title`).text(`Sauces!`);
     document.getElementById("create-sauce").style.display = "none" ;
     document.getElementById("display-sauce").style.display = "none";
-    document.getElementById("home-page").style.display = "block" ;
+    document.getElementById("home-page").style.display = "flex" ;
     $(`.create-sauce`).text(`Create Sauce`); 
     state.page = `home`;
   }else{
@@ -378,16 +393,18 @@ let toggleEditing = (overRide) => {
 
   // [`title`, `description-box`, `use-box`, `spicy-box`, 
   //                   `time-box`, `sauce-ingredients`, `sauce-directions`];
-  console.log(editables.map((val) => document.getElementsByClassName(val)));
+  //console.log(editables.map((val) => document.getElementsByClassName(val)));
   editables = editables.map((val) => document.getElementsByClassName(val));
-  
-  if (editables[0].contentEditable == "true" || overRide === false){
+  //console.log(editables[0][0])
+  //console.log(editables[0][0].contentEditable)
+  if (editables[0][0].contentEditable == "true" || overRide === false){
     for (let collection of editables){
       for (let element of collection){
         disableEditing(element);
       }
     }
     console.log(`uneditable`);
+    getContent();
   }else{
     for (let collection of editables){
       for (let element of collection){
@@ -402,14 +419,20 @@ let toggleEditing = (overRide) => {
 let enableEditing = (element) => {
   //console.log(element);
   element.contentEditable = "true";
+  element.style.backgroundColor = "#D3D3D3";
+  //element.style.opacity = "0.5"
+  //element.style.backgroundColor = "white";
 }
 //turn editing off
 let disableEditing = (element) => {
+  element.style.backgroundColor = "transparent";
   element.contentEditable = "false";
+  
 }
 
 let getContent = () => {
   //console.log(document.getElementsByClassName(`ingredient-box`))
+  //toggleEditing(false);
   let pageCollection = [`title`, `description-box`, `use-span`, `spice-span`, 
                   `time-span`, `ingredient-span`,`quantity-span`, `direction-box`];
   pageCollection = pageCollection.map((val) => document.getElementsByClassName(val));
@@ -421,8 +444,9 @@ let getContent = () => {
       
     }
   }
-  console.log(uglyData)
-  return uglyData;
+  //console.log(uglyData)
+  //return uglyData;
+  handleUglyData(uglyData);
 }
 
 //convert content data to sauce object
@@ -436,7 +460,8 @@ let handleUglyData = (data) =>{
   };
   let stepCount = 0;
   for (let i = 0; i < data.length; i++){
-    if (data[i][`value`]){
+    //if (data[i][`value`]){
+      data[i][`value`] = data[i][`value`] || ` `;
       if(data[i][`name`] === `title`){
         sauce.name = data[i][`value`];
       }else if (data[i][`name`] === `description-box`){
@@ -463,16 +488,41 @@ let handleUglyData = (data) =>{
         let step = `${capitalizeFirst(data[i][`value`])}`
         sauce.directions[`Step ${++stepCount}`] = step;
       }
-    } 
+    //} 
   }
   sauce.rawIngredients.ingredient.forEach((val, i) => {
     sauce.ingredients[val] = sauce.rawIngredients.quantity[i];
   });
   delete sauce.rawIngredients;
-  return sauce;
+  //console.log(sauce);
+  if (sauce.name !== ` `){
+    //return sauce;
+    saveSauce(sauce);
+  }else{
+    //alert(`invalid sauce name`);
+  }
+  
 }
 
+let getRidOfGarbage = () => {
+  let array = JSON.parse(getItem(`sauceArray`))
+  let newArray = []
+  array.forEach((val) => {
+    if (val !== `` && val !== ` `){
+      newArray.push(val);
+    }
+  });
 
+  updateItem(`sauceArray`,JSON.stringify(newArray));
+}
+let addSauce = (sauceNames) => {
+  if (typeof sauceNames === `string`){
+    sauceNames = [sauceNames];
+  }
+  let array = JSON.parse(getItem(`sauceArray`));
+  sauceNames.forEach((val) => array.push(sauceName));
+  updateItem(`sauceArray`,JSON.stringify(array));
+}
 
 
 
@@ -488,8 +538,6 @@ let state = {
 //event handlers for the buttons and ... possibly the inputboxes
   //preventdefault on button clicks
 $(document).ready(function() {
-  // document.getElementById("display-sauce").style.display = "none";
-  // document.getElementById("create-sauce").style.display = "none";
   if (keyExists(`sauceArray`) && Array.isArray(JSON.parse(getItem(`sauceArray`)))){
     loadSelector()
     loadSauceList();
@@ -506,9 +554,11 @@ $(document).ready(function() {
   $(`#select-sauce`).click(selectSauce);
   $(`.delete-btn`).click(deleteSauce);
   $(`.home-btn`).click((event) => changePage(`home`));
+  $(`h1`).click((event) => changePage(`home`));
   //$(`.sauce-list-element`).click((event) => displaySauce(event.currentTarget.id));//for some reason this wasnt working with newly added buttons
   $(document).on(`click`,`.sauce-list-element`, (event) => displaySauce(event.currentTarget.id));
-  $(`.edit-btn`).click(toggleEditing);
+  //$(`.edit-btn`).click(toggleEditing);
+  $(document).on(`click`,`.edit-btn`, toggleEditing);
 });
 
 
