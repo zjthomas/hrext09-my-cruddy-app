@@ -255,11 +255,14 @@ var displaySauce = (sauceName) => {
   let $sauceDescription2 = $(`<div class="sauce-description"></div>`);
   let useString = ``;
   if (sauce.uses.length > 0){
-    useString = sauce.uses.reduce((acc, val) => `${acc}, ${val}`)
+    let temp = sauce.uses.map((val) => `<span class="use-span">${val}</span>`)
+    useString = temp.reduce((acc, val) => `${acc}, ${val}`)
   } 
   let $uses = $(`<div class="use-box"><b>Uses:</b> ${useString}</div>`);
-  let $spice = $(`<div class="spicy-box"><b>Spicyness:</b> ${(sauce.spicyness) ? `${sauce.spicyness}/10` : ``}</div>`);
-  let $prep = $(`<div class="time-box"><b>Prep Time:</b> ${(sauce.time) ? `${sauce.time}` : ``}</div>`)
+  let $spice = $(`<div class="spicy-box"><b>Spicyness: </b>${(sauce.spicyness) ? 
+                  `<span class="spice-span">${sauce.spicyness}</span>/10` : `<span class="spice-span"></span>`}</div>`);
+  let $prep = $(`<div class="time-box"><b>Prep Time: </b>${(sauce.time) ? 
+                  `<span class="time-span">${sauce.time}</span> minutes` : `<span class="time-span"></span>`}</div>`)
   $sauceDescription2.append($uses).append($spice).append($prep);
   $displayDescription.append($sauceDescription).append($sauceDescription2);
   /*
@@ -274,8 +277,8 @@ var displaySauce = (sauceName) => {
   $displayIngredients.append($ingredientsHeading);
   let $sauceIngredients = $(`<ul class="sauce-ingredients"></ul>`);
   for (let key in sauce.ingredients){
-    let $ingredient = $(`<li class="ingredient-box">${key}${(sauce.ingredients[key]) ? 
-                                                          `: ${sauce.ingredients[key]}` : ``}</li>`)
+    let $ingredient = $(`<li class="ingredient-box"><span class="ingredient-span">${key}</span>: 
+      <span class="quantity-span">${(sauce.ingredients[key]) ? `${sauce.ingredients[key]}` : ``}</span></li>`)
     $sauceIngredients.append($ingredient);
   }
   $sauceIngredients.appendTo($displayIngredients);
@@ -370,21 +373,34 @@ let resetForm = () => {
 
 // edit sauces
 let toggleEditing = (overRide) => {
-  let editables = [`title`, `description-box`, `use-box`, `spicy-box`, 
-                    `time-box`, `sauce-ingredients`, `sauce-directions`];
-  editables = editables.map((val) => document.getElementsByClassName(val)[0]);
-  //console.log(editables[0].contentEditable);
+  let editables = [`title`, `description-box`, `use-span`, `spice-span`, 
+                  `time-span`, `ingredient-span`,`quantity-span`, `direction-box`];
+
+  // [`title`, `description-box`, `use-box`, `spicy-box`, 
+  //                   `time-box`, `sauce-ingredients`, `sauce-directions`];
+  console.log(editables.map((val) => document.getElementsByClassName(val)));
+  editables = editables.map((val) => document.getElementsByClassName(val));
+  
   if (editables[0].contentEditable == "true" || overRide === false){
-    editables.forEach((val) => disableEditing(val));
+    for (let collection of editables){
+      for (let element of collection){
+        disableEditing(element);
+      }
+    }
     console.log(`uneditable`);
   }else{
-    editables.forEach((val) => enableEditing(val));
+    for (let collection of editables){
+      for (let element of collection){
+        enableEditing(element);
+      }
+    }
     console.log(`editable`);
   }
 }
 
 //turn editing on
 let enableEditing = (element) => {
+  //console.log(element);
   element.contentEditable = "true";
 }
 //turn editing off
@@ -394,32 +410,25 @@ let disableEditing = (element) => {
 
 let getContent = () => {
   //console.log(document.getElementsByClassName(`ingredient-box`))
-  let pageCollection = [`title`, `description-box`, `use-box`, `spicy-box`, 
-                  `time-box`, `ingredient-box`, `direction-box`];
+  let pageCollection = [`title`, `description-box`, `use-span`, `spice-span`, 
+                  `time-span`, `ingredient-span`,`quantity-span`, `direction-box`];
   pageCollection = pageCollection.map((val) => document.getElementsByClassName(val));
   //console.log(pageCollection);
   let uglyData = []
   for (let itemCollection of pageCollection){
     for (let content of itemCollection){
-      //console.log(`${content.className} is paired with ${content.textContent}`)
       uglyData.push({name: content.className, value: content.textContent});
-      /*
-      if (!uglyData[content.className]){
-        uglyData[content.className] = [content.textContent];
-      }else{
-        uglyData[content.className].push(content.textContent);
-      }
-      */
       
     }
   }
-  //console.log(uglyData)
+  console.log(uglyData)
   return uglyData;
 }
 
 //convert content data to sauce object
 let handleUglyData = (data) =>{
   let sauce = {
+    rawIngredients: {ingredient:[], quantity:[]},
     ingredients: {},
     directions: {},
     uses: [],
@@ -432,14 +441,10 @@ let handleUglyData = (data) =>{
         sauce.name = data[i][`value`];
       }else if (data[i][`name`] === `description-box`){
         sauce.description = data[i][`value`];
-      }else if (data[i][`name`] === `use-box`){
-        let useArray = findString(data[i][`value`],` `, `,`);
-        useArray.forEach((val) => {
-          sauce.uses.push(capitalizeFirst(val));
-        });
-        
-      }else if (data[i][`name`] === `spicy-box`){
-        let spice = findString(data[i][`value`],` `, `/`)[0];
+      }else if (data[i][`name`] === `use-span`){
+        sauce.uses.push(capitalizeFirst(data[i][`value`]));
+      }else if (data[i][`name`] === `spice-span`){
+        let spice = data[i][`value`]
         if (spice < 0){
           spice = 0;
         }
@@ -447,38 +452,25 @@ let handleUglyData = (data) =>{
           spice = 11;
         }
         sauce.spicyness = spice;
-      }else if (data[i][`name`] === `time-box`){
-        let time = Number(findString(data[i][`value`],`: `))
+      }else if (data[i][`name`] === `time-span`){
+        let time = Number(data[i][`value`])
         sauce.time = time;
-      }else if (data[i][`name`] === `ingredient-box`){
-        let ingredient = findString(data[i][`value`], null, `:`)[0];
-        let quantity = findString(data[i][`value`],` `)[0];
-        ingredient = capitalizeFirst(ingredient);
-        sauce.ingredients[ingredient] = quantity;
-      }else if (data[i][`name`] === `direction-box`){
+      }else if (data[i][`name`] === `ingredient-span`){
+        sauce.rawIngredients.ingredient.push(data[i][`value`]);
+      }else if (data[i][`name`] === `quantity-span`){
+        sauce.rawIngredients.quantity.push(data[i][`value`]);
+      } if (data[i][`name`] === `direction-box`){
         let step = `${capitalizeFirst(data[i][`value`])}`
         sauce.directions[`Step ${++stepCount}`] = step;
-      }/****else if (data[i][`name`] === `type`){
-        let type = data[i][`value`].toLowerCase();
-        sauce.types.push(type);
-      }****/
+      }
     } 
   }
+  sauce.rawIngredients.ingredient.forEach((val, i) => {
+    sauce.ingredients[val] = sauce.rawIngredients.quantity[i];
+  });
+  delete sauce.rawIngredients;
   return sauce;
 }
-//pulls the data out of the content strings, should swicth to regEx eventually
-let findString = (str, startChar, endChar) => {
-  let i1 = (startChar === null) ? 0: str.indexOf(startChar) + 1;
-  let i2 =  str.indexOf(endChar);
-  if (i1 === -1){
-    return []
-  }
-  if (i2 <= i1){
-    return [str.slice(i1)]
-  }
-  return [str.slice(i1,i2)].concat(findString(str.slice(i2), startChar, endChar));
-}
-
 
 
 
