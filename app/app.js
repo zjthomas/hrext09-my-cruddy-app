@@ -504,6 +504,7 @@ let handleUglyData = (data) =>{
   
 }
 
+// utilities for dealing with bugs
 let getRidOfGarbage = () => {
   let array = JSON.parse(getItem(`sauceArray`))
   let newArray = []
